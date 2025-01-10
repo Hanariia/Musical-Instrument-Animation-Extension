@@ -1,5 +1,6 @@
 import bpy
 from .panels.estimated_hand_poses_reference import EstimatedHandPosesReferencePanel
+from .operators.setup_video_reference import SetupVideoReferenceOperator
 
 bl_info = {
     "name": "Musical Instrument Animation Extension",
@@ -12,7 +13,7 @@ bl_info = {
 }
 
 classes = [
-    EstimatedHandPosesReferencePanel
+    EstimatedHandPosesReferencePanel, SetupVideoReferenceOperator,
 ]
 
 register, unregister = bpy.utils.register_classes_factory(classes)
