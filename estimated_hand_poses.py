@@ -1,7 +1,7 @@
 from bisect import bisect_left
 from enum import Enum
 import json
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 class HandType(Enum):
@@ -10,37 +10,31 @@ class HandType(Enum):
 
 
 class HandPose:
-    index: int
-    hand_type: HandType
-    timestamp: float
-    image_filename: str
-    normalized_positions: List[Dict[str, float]]
-    world_positions: List[Dict[str, float]]
-
     def __init__(self, index: int, hand_type: HandType, timestamp: float,
                  normalized_positions: List[Dict[str, float]], world_positions: List[Dict[str, float]]):
-        self.index = index
-        self.hand_type = hand_type
-        self.timestamp = timestamp
-        self.normalized_positions = normalized_positions
-        self.world_positions = world_positions  # maybe useful to view for the user?
+        self.index: int = index
+        self.hand_type: HandType = hand_type
+        self.timestamp: float = timestamp
+        self.image_filename: Optional[str] = None
+        self.normalized_positions: List[Dict[str, float]] = normalized_positions
+        self.world_positions: List[Dict[str, float]] = world_positions  # maybe useful to view for the user?
 
 
 class EstimatedHandPoses:
-    left_hand_poses: List[HandPose]
-    right_hand_poses: List[HandPose]
-
     def __init__(self, filepath):
+        self.left_hand_poses: List[HandPose] = []
+        self.right_hand_poses: List[HandPose] = []
+
         with open(filepath, "r") as hand_data_file:
             hand_data = json.load(hand_data_file)
 
             # process up to 1 hand of each type
             for hand in hand_data:
-                if hand["type"] == "Right" and self.right_hand_poses is None:
+                if hand["type"] == "Right" and not self.right_hand_poses:
                     self.right_hand_poses = self.__create_hand_poses_list(hand['type'], hand['animationData'])
-                elif hand["type"] == "Left" and self.left_hand_poses is None:
+                elif hand["type"] == "Left" and not self.left_hand_poses:
                     self.left_hand_poses = self.__create_hand_poses_list(hand['type'], hand['animationData'])
-                if self.right_hand_poses is not None and self.left_hand_poses is not None:
+                if self.right_hand_poses and self.left_hand_poses:
                     break
 
     @staticmethod
