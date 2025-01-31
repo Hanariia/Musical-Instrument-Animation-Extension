@@ -1,4 +1,6 @@
 import bpy
+from ..operators.setup_video_reference import SetupVideoReferenceOperator
+from ..operators.hand_pose_overlay import HandPoseOverlayOperator
 
 
 class EstimatedHandPosesReferencePanel(bpy.types.Panel):
@@ -11,5 +13,7 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         row = layout.row()
-        row.operator("screen.setup_video_reference", text="Setup Video Reference")
+        row.operator(SetupVideoReferenceOperator.bl_idname, text=SetupVideoReferenceOperator.bl_label)
+        row = layout.row()
+        row.operator(HandPoseOverlayOperator.bl_idname, text="Import Estimated Hand Poses")
 
