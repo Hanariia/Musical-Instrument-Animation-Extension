@@ -1,13 +1,15 @@
-import sys
-from json import JSONDecodeError
-from typing import List, Dict
-import numpy as np
-from PIL import Image
-from mediapipe.framework.formats import landmark_pb2
-from mediapipe import solutions
-import json
-
-import time
+try:
+    import sys
+    import site
+    from json import JSONDecodeError
+    from typing import List, Dict
+    import numpy as np
+    from PIL import Image
+    from mediapipe.framework.formats import landmark_pb2
+    from mediapipe import solutions
+    import json
+except ImportError as e:
+    raise Exception(f"{e.msg}. Please install the missing packages: python -m pip install <missing_package>")
 
 
 def create_hand_pose_image(image_height: int, image_width: int,
@@ -46,8 +48,6 @@ def main():
         image_width:    width of the generated image in pixels
         positions:      hand pose's normalized positions in json string format
     """
-
-    start_time = time.time()
     usage = f"Usage: python {sys.argv[0]} <filepath> <image_height> <image_width> <positions> " + main.__doc__
     if len(sys.argv) != 5:
         raise ValueError("Invalid number of arguments. " + usage)
@@ -66,7 +66,6 @@ def main():
 
     image = create_hand_pose_image(height, width, normalized_positions)
     save_hand_pose_image(image, filepath)
-    print("total skript time: " + str(time.time() - start_time))
 
 
 if __name__ == "__main__":
