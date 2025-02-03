@@ -3,7 +3,7 @@ import os
 import bpy
 
 from ..estimated_hand_poses import HandType
-from ..miae_utils import find_area
+from ..miae_utils import find_area, get_abs_addon_dir
 from ..hand_pose_image_manager import HandPoseImageManager, ImageStripData, HAND_POSES_DIRECTORY
 
 
@@ -73,7 +73,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
     @staticmethod
     def add_image_strip(context, image_strip_data: ImageStripData):
-        abs_directory_path = os.path.join(os.getcwd(), HAND_POSES_DIRECTORY)
+        abs_directory_path = os.path.join(get_abs_addon_dir(), HAND_POSES_DIRECTORY)
         with context.temp_override(area=find_area(bpy.context, area_type='SEQUENCE_EDITOR')):
             bpy.ops.sequencer.image_strip_add(
                 directory=abs_directory_path,
