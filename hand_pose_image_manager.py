@@ -36,19 +36,19 @@ class HandPoseImageManager:
             os.makedirs(HAND_POSES_DIRECTORY)
 
     def get_frames_image_strip_data(self, frame, fps, previous_frames_count, next_frames_count):
-        # todo: implement adjacent frames processing, maybe use queue instead of list?
+        # todo: implement adjacent frames processing
         image_strips = []
         timestamp = frame / fps
         for hand_type in [HandType.RIGHT, HandType.LEFT]:
-            hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_type)
             hand_pose = self.estimated_hand_poses.find_hand_pose(timestamp, hand_type)
             if hand_pose.image_filename is None:
-                strip = self.create_image_strip_data(hand_pose, hand_poses_list, fps)
+                self.__create_image(hand_pose)
+                strip = self.create_image_strip_data(hand_pose, fps)
                 image_strips.append(strip)
         return image_strips
 
-    def create_image_strip_data(self, hand_pose: HandPose, hand_poses_list: List[HandPose],
-                                fps: float) -> ImageStripData:
+    def create_image_strip_data(self, hand_pose: HandPose, fps: float) -> ImageStripData:
+        hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
         start_frame = int(floor(hand_pose.timestamp * fps))
         end_frame = None
         if hand_pose.index + 1 < len(hand_poses_list):
@@ -56,10 +56,10 @@ class HandPoseImageManager:
         return ImageStripData(
             start_frame,
             end_frame,
-            self.__get_image(hand_pose),
+            hand_pose.image_filename,
             hand_pose.hand_type)
 
-    def __get_image(self, hand_pose: HandPose) -> str:
+    def __create_image(self, hand_pose: HandPose) -> None:
         if hand_pose.image_filename is None:
             filename = f"hand_pose{hand_pose.index}{hand_pose.hand_type.name}.png"
             subprocess.run(['python', os.path.join(get_abs_addon_dir(), "draw_handmarks.py"),
@@ -68,4 +68,3 @@ class HandPoseImageManager:
                             str(self.image_size[1]),
                             json.dumps(hand_pose.normalized_positions)])
             hand_pose.image_filename = filename
-        return hand_pose.image_filename
