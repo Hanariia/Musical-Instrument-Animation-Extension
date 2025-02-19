@@ -36,18 +36,31 @@ class HandPoseImageManager:
             os.makedirs(HAND_POSES_DIRECTORY)
 
     def get_frames_image_strip_data(self, frame, fps, previous_frames_count, next_frames_count):
-        # todo: implement adjacent frames processing
         image_strips = []
         timestamp = frame / fps
         for hand_type in [HandType.RIGHT, HandType.LEFT]:
             hand_pose = self.estimated_hand_poses.find_hand_pose(timestamp, hand_type)
-            if hand_pose.image_filename is None:
-                self.__create_image(hand_pose)
-                strip = self.create_image_strip_data(hand_pose, fps)
+            adjacent_poses = self.__get_adjacent_poses(hand_pose, previous_frames_count, next_frames_count)
+            strips = self.__get_hand_poses_image_strip_data(adjacent_poses, fps)
+            image_strips.extend(strips)
+        return image_strips
+
+    def __get_hand_poses_image_strip_data(self, adjacent_poses, fps):
+        image_strips = []
+        for adj_pose in adjacent_poses:
+            if adj_pose.image_filename is None:
+                self.__create_image(adj_pose)
+                strip = self.__create_image_strip_data(adj_pose, fps)
                 image_strips.append(strip)
         return image_strips
 
-    def create_image_strip_data(self, hand_pose: HandPose, fps: float) -> ImageStripData:
+    def __get_adjacent_poses(self, hand_pose: HandPose, previous_frames_count, next_frames_count) -> List[HandPose]:
+        hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
+        bottom_index = max(0, hand_pose.index - previous_frames_count)
+        top_index = hand_pose.index + next_frames_count
+        return hand_poses_list[bottom_index:top_index + 1]
+
+    def __create_image_strip_data(self, hand_pose: HandPose, fps: float) -> ImageStripData:
         hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
         start_frame = int(floor(hand_pose.timestamp * fps))
         end_frame = None
