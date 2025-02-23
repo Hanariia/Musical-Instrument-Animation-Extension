@@ -1,5 +1,4 @@
 import os
-
 import bpy
 
 from ..estimated_hand_poses import HandType
@@ -32,7 +31,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
         if self.image_manager is None:
             self.__set_attributes(context)
         image_strips = self.image_manager.get_frames_image_strip_data(
-            bpy.context.scene.frame_current, self.__get_fps(), 2, 3)
+            bpy.context.scene.frame_current, self.__get_fps(), 1, 2)
         for strip in image_strips:
             # handle the end of the last image strip
             if strip.end_frame is None:

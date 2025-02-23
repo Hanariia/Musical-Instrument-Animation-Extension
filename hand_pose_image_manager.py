@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from math import floor
 from typing import Tuple, List, Optional
 
+from .draw_handmarks import create_hand_pose_image
 from .miae_utils import get_abs_addon_dir
 from .estimated_hand_poses import EstimatedHandPoses, HandPose, HandType
 
@@ -75,9 +76,6 @@ class HandPoseImageManager:
     def __create_image(self, hand_pose: HandPose) -> None:
         if hand_pose.image_filename is None:
             filename = f"hand_pose{hand_pose.index}{hand_pose.hand_type.name}.png"
-            subprocess.run(['python', os.path.join(get_abs_addon_dir(), "draw_handmarks.py"),
-                            os.path.join(get_abs_addon_dir(), HAND_POSES_DIRECTORY, filename),
-                            str(self.image_size[0]),
-                            str(self.image_size[1]),
-                            json.dumps(hand_pose.normalized_positions)])
+            full_path = os.path.join(get_abs_addon_dir(), HAND_POSES_DIRECTORY, filename)
+            create_hand_pose_image(self.image_size[0], self.image_size[1], hand_pose.normalized_positions, full_path)
             hand_pose.image_filename = filename
