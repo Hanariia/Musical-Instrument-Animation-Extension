@@ -29,6 +29,7 @@ class SetupVideoReferenceOperator(bpy.types.Operator):
                 filepath=self.filepath,
                 show_multiview=False, frame_start=1, channel=1, fit_method='FIT', adjust_playback_rate=True, sound=True,
                 use_framerate=False, replace_sel=True)
+            bpy.context.scene.frame_end = max(context.sequences[0].frame_final_end - 1, bpy.context.scene.frame_end)
         return {'FINISHED'}
 
     def invoke(self, context, event):
