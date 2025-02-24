@@ -15,6 +15,12 @@ class HandPoseOverlayOperator(bpy.types.Operator):
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
     filename: bpy.props.StringProperty(subtype='FILE_NAME')
 
+    # filters the file selection
+    filter_glob: bpy.props.StringProperty(
+        default="*.json",
+        options={'HIDDEN'},
+    )
+
     def __init__(self):
         super().__init__()
         self.image_manager = None

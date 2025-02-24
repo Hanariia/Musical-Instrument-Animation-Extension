@@ -11,6 +11,12 @@ class SetupVideoReferenceOperator(bpy.types.Operator):
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
     filename: bpy.props.StringProperty(subtype='FILE_NAME')
 
+    # filters the file selection
+    filter_glob: bpy.props.StringProperty(
+        default="*.mp4;*.avi;*.mov;*.mkv;*.webm;*.mpg;*.mpeg",
+        options={'HIDDEN'},
+    )
+
     @classmethod
     def poll(cls, context):
         for area in context.screen.areas.values():
