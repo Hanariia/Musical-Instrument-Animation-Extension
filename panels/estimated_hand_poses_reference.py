@@ -13,7 +13,7 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         row = layout.row()
-        row.operator(SetupVideoReferenceOperator.bl_idname, text=SetupVideoReferenceOperator.bl_label)
+        row.operator("wm.check_sequencer_availability", text=SetupVideoReferenceOperator.bl_label, icon='FILE_MOVIE')
         row = layout.row()
-        row.operator(HandPoseOverlayOperator.bl_idname, text="Import Estimated Hand Poses")
+        row.operator(HandPoseOverlayOperator.bl_idname, text="Import Estimated Hand Poses", icon='IMPORT')
 
