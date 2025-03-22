@@ -10,6 +10,7 @@ if user_site_pkgs not in sys.path:
 try:
     from .operators.hand_pose_overlay import HandPoseOverlayOperator
     from .panels.estimated_hand_poses_reference import EstimatedHandPosesReferencePanel
+    from .panels.reference_settings_pannel import VideoReferenceSettingsPanel
     from .operators.setup_video_reference import SetupVideoReferenceOperator
 except ImportError as import_error:
     raise Exception(f"{import_error.msg}. Please install the missing packages to {user_site_pkgs}")
@@ -25,7 +26,7 @@ bl_info = {
 }
 
 classes = [
-    EstimatedHandPosesReferencePanel, SetupVideoReferenceOperator, HandPoseOverlayOperator
+    EstimatedHandPosesReferencePanel, SetupVideoReferenceOperator, HandPoseOverlayOperator, VideoReferenceSettingsPanel
 ]
 
 register, unregister = bpy.utils.register_classes_factory(classes)
