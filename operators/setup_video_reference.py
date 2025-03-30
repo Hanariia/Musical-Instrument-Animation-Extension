@@ -1,10 +1,13 @@
+import os
+from typing import List
+
 import bpy
 from ..miae_utils import find_area
 
 
 class SetupVideoReferenceOperator(bpy.types.Operator):
     """Adds an area with a video reference to the screen."""
-    bl_idname = "screen.setup_video_reference"
+    bl_idname = "mia.setup_video_reference"
     bl_label = "Setup Video Reference"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -12,8 +15,10 @@ class SetupVideoReferenceOperator(bpy.types.Operator):
     filename: bpy.props.StringProperty(subtype='FILE_NAME')
 
     # filters the file selection
+    accepted_file_extensions: List[str] = [".mp4", ".avi", ".mov", ".mkv", ".webm", ".mpg", ".mpeg"]
+    extensions_string = "*" + ";*".join(accepted_file_extensions)
     filter_glob: bpy.props.StringProperty(
-        default="*.mp4;*.avi;*.mov;*.mkv;*.webm;*.mpg;*.mpeg",
+        default=extensions_string,
         options={'HIDDEN'},
     )
 
@@ -25,6 +30,10 @@ class SetupVideoReferenceOperator(bpy.types.Operator):
         return False
 
     def execute(self, context):
+        if not self.__is_selected_file_valid():
+            self.report({'ERROR'}, 'Please select a video file.')
+            return {'CANCELLED'}
+
         self.__setup_preview_area(context)
 
         # add video to preview
@@ -42,8 +51,15 @@ class SetupVideoReferenceOperator(bpy.types.Operator):
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
+    def __is_selected_file_valid(self):
+        if not os.path.isfile(self.filepath):
+            return False
+        if os.path.splitext(self.filename)[1] not in self.accepted_file_extensions:
+            return False
+        return True
+
     def __setup_preview_area(self, context):
-        # check if preview are is already present
+        # check if preview area is already present
         area_for_preview = find_area(context, 'SEQUENCE_EDITOR')
         if area_for_preview is not None and area_for_preview.spaces[0].view_type == 'PREVIEW':
             return area_for_preview
