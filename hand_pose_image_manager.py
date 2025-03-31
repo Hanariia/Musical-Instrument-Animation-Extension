@@ -1,8 +1,5 @@
-import json
 import os
-import subprocess
 from dataclasses import dataclass
-from math import floor
 from typing import Tuple, List, Optional
 
 from .draw_handmarks import create_hand_pose_image
@@ -63,10 +60,10 @@ class HandPoseImageManager:
 
     def __create_image_strip_data(self, hand_pose: HandPose, fps: float) -> ImageStripData:
         hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
-        start_frame = int(floor(hand_pose.timestamp * fps))
+        start_frame = int(round(hand_pose.timestamp * fps))
         end_frame = None
         if hand_pose.index + 1 < len(hand_poses_list):
-            end_frame = int(floor(hand_poses_list[hand_pose.index + 1].timestamp * fps))
+            end_frame = int(round(hand_poses_list[hand_pose.index + 1].timestamp * fps))
         return ImageStripData(
             start_frame,
             end_frame,

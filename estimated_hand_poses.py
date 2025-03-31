@@ -11,13 +11,12 @@ class HandType(Enum):
 
 class HandPose:
     def __init__(self, index: int, hand_type: HandType, timestamp: float,
-                 normalized_positions: List[Dict[str, float]], world_positions: List[Dict[str, float]]):
+                 normalized_positions: List[Dict[str, float]]):
         self.index: int = index
         self.hand_type: HandType = hand_type
         self.timestamp: float = timestamp
         self.image_filename: Optional[str] = None
         self.normalized_positions: List[Dict[str, float]] = normalized_positions
-        self.world_positions: List[Dict[str, float]] = world_positions  # maybe useful to view for the user?
 
 
 class EstimatedHandPoses:
@@ -46,7 +45,6 @@ class EstimatedHandPoses:
                 HandType[hand_type.upper()],
                 hand_pose['timestamp'],
                 hand_pose['normalizedPositions'],
-                hand_pose['worldPositions']
             ))
         return hand_poses_list
 
