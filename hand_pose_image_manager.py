@@ -65,8 +65,8 @@ class HandPoseImageManager:
         if hand_pose.index + 1 < len(hand_poses_list):
             end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
         return ImageStripData(
-            start_frame,
-            end_frame,
+            int(start_frame),
+            int(end_frame),
             hand_pose.image_filename,
             hand_pose.hand_type)
 
