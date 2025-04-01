@@ -2,7 +2,7 @@ import bpy
 import site
 import sys
 
-
+from .settings_properties import OverlaySettings
 
 user_site_pkgs = site.getusersitepackages()
 if user_site_pkgs not in sys.path:
@@ -30,7 +30,7 @@ bl_info = {
 
 classes = [
     EstimatedHandPosesReferencePanel, SetupVideoReferenceOperator, HandPoseOverlayOperator, HandPoseOverlayProperties, VideoReferenceSettingsPanel,
-    CheckSequencerAvailabilityOperator, ImportHandDataOperator
+    CheckSequencerAvailabilityOperator, ImportHandDataOperator, OverlaySettings
 ]
 
 
@@ -40,6 +40,7 @@ def register():
 
     # Register Properties
     bpy.types.WindowManager.overlay_properties = bpy.props.PointerProperty(type=HandPoseOverlayProperties)
+    bpy.types.Scene.overlay_settings = bpy.props.PointerProperty(type=OverlaySettings)
 
 
 def unregister():
@@ -47,3 +48,4 @@ def unregister():
         bpy.utils.unregister_class(cls)
     # Unregister Properties
     del bpy.types.WindowManager.overlay_properties
+    del bpy.types.Scene.overlay_settings

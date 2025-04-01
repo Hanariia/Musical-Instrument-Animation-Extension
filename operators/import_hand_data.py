@@ -27,7 +27,7 @@ class ImportHandDataOperator(bpy.types.Operator):
         overlay_properties.filepath = self.filepath
 
         if overlay_properties.overlay_active:
-            overlay_properties.hand_pose_file_updated = True
+            overlay_properties.refresh_overlay = True
         else:
             bpy.ops.mia.hand_pose_overlay('INVOKE_DEFAULT')
             overlay_properties.overlay_active = True

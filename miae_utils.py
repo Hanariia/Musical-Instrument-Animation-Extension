@@ -12,3 +12,8 @@ def find_area(context, area_type: str) -> bpy.types.Area:
 
 def get_abs_addon_dir() -> str:
     return os.path.dirname(os.path.abspath(__file__))
+
+
+def refresh_overlay(self, context):
+    context.window_manager.overlay_properties.refresh_overlay = True
+    

@@ -13,8 +13,16 @@ class VideoReferenceSettingsPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Hand Visibility")
+        row = layout.row()
+        row.label(text="Hand Visibility")
         row = layout.row()
         row.prop(context.scene.sequence_editor.channels['Channel 2'], "mute", text="Right Hand", invert_checkbox=True)
         row = layout.row()
         row.prop(context.scene.sequence_editor.channels['Channel 3'], "mute", text="Left Hand", invert_checkbox=True)
+        row = layout.row()
+
+        row.label(text="Hand Pose Alignment")
+        row = layout.row()
+        row.prop(context.scene.overlay_settings, "center_align_hand_poses", text="Center Align", toggle=True)
+        row.prop(context.scene.overlay_settings, "center_align_hand_poses", text="Edge Align", toggle=True,
+                 invert_checkbox=True)

@@ -1,6 +1,8 @@
 import os
 from dataclasses import dataclass
+from math import floor
 from typing import Tuple, List, Optional
+import bpy
 
 from .draw_handmarks import create_hand_pose_image
 from .miae_utils import get_abs_addon_dir
@@ -59,16 +61,40 @@ class HandPoseImageManager:
         return hand_poses_list[bottom_index:top_index + 1]
 
     def __create_image_strip_data(self, hand_pose: HandPose, fps: float) -> ImageStripData:
-        hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
-        start_frame = round(hand_pose.timestamp * fps)
-        end_frame = None
-        if hand_pose.index + 1 < len(hand_poses_list):
-            end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
+        if bpy.context.scene.overlay_settings.center_align_hand_poses:
+            start_frame, end_frame = self.__get_center_aligned_frames(hand_pose, fps)
+        else:
+            start_frame, end_frame = self.__get_edge_aligned_frames(hand_pose, fps)
+
         return ImageStripData(
-            int(start_frame),
-            int(end_frame),
+            start_frame,
+            end_frame,
             hand_pose.image_filename,
             hand_pose.hand_type)
+
+    def __get_edge_aligned_frames(self, hand_pose: HandPose, fps: float) -> Tuple[int, Optional[int]]:
+        hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
+        start_frame = round(hand_pose.timestamp * fps)
+
+        if hand_pose.index == len(hand_poses_list) - 1:
+            return start_frame, None
+        end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
+        return start_frame, end_frame
+
+    def __get_center_aligned_frames(self, hand_pose: HandPose, fps: float) -> Tuple[int, Optional[int]]:
+        hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
+        hand_pose_frame = hand_pose.timestamp * fps
+        if hand_pose.index == 0:
+            start_frame = round(hand_pose_frame)
+        else:
+            prev_frame = hand_poses_list[hand_pose.index - 1].timestamp * fps
+            start_frame = int((hand_pose_frame + prev_frame) // 2)
+
+        if hand_pose.index == len(hand_poses_list) - 1:
+            return start_frame, None
+        end_frame = hand_poses_list[hand_pose.index + 1].timestamp * fps
+        end_frame = int((hand_pose_frame + end_frame) // 2)
+        return start_frame, end_frame
 
     def __create_image(self, hand_pose: HandPose) -> None:
         if hand_pose.image_filename is None:

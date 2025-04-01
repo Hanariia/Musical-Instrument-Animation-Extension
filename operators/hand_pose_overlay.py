@@ -37,9 +37,9 @@ class HandPoseOverlayOperator(bpy.types.Operator):
     def modal(self, context, event):
         overlay_properties = context.window_manager.overlay_properties
 
-        if overlay_properties.hand_pose_file_updated:
+        if overlay_properties.refresh_overlay:
             self.__refresh_overlay(context)
-            context.window_manager.overlay_properties.hand_pose_file_updated = False
+            context.window_manager.overlay_properties.refresh_overlay = False
             self.report({'INFO'}, "Refreshing Hand Pose Overlay...")
 
         if overlay_properties.clear_overlay:
@@ -107,7 +107,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
 
 class HandPoseOverlayProperties(bpy.types.PropertyGroup):
-    hand_pose_file_updated: bpy.props.BoolProperty(default=False)
+    refresh_overlay: bpy.props.BoolProperty(default=False)
     clear_overlay: bpy.props.BoolProperty(default=False)
     overlay_active: bpy.props.BoolProperty(default=False)
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
