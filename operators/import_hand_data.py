@@ -1,12 +1,12 @@
 import os
-
 import bpy
+from bpy_extras.io_utils import ImportHelper
 
 
-class ImportHandDataOperator(bpy.types.Operator):
+class ImportHandDataOperator(bpy.types.Operator, ImportHelper):
     """Import estimated hand poses json."""
     bl_idname = "mia.import_hand_data"
-    bl_label = "Import Hand Data"
+    bl_label = "Import Estimated Hand Poses"
     bl_options = {'REGISTER', 'UNDO'}
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
@@ -36,17 +36,7 @@ class ImportHandDataOperator(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         sequence_editor = bpy.context.scene.sequence_editor
-        if sequence_editor and len(sequence_editor.sequences) != 0:
-            return True
-        return False
-
-    def invoke(self, context, event):
-        context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
+        return sequence_editor and len(sequence_editor.sequences) != 0
 
     def __is_selected_file_valid(self):
-        if not os.path.isfile(self.filepath):
-            return False
-        if os.path.splitext(self.filename)[1] != ".json":
-            return False
-        return True
+        return os.path.isfile(self.filepath) and os.path.splitext(self.filename)[1] == ".json"

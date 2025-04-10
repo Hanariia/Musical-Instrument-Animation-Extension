@@ -1,11 +1,11 @@
 import os
 from typing import List
-
 import bpy
+from bpy_extras.io_utils import ImportHelper
 from ..miae_utils import find_area
 
 
-class SetupVideoReferenceOperator(bpy.types.Operator):
+class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
     """Adds an area with a video reference to the screen."""
     bl_idname = "mia.setup_video_reference"
     bl_label = "Setup Video Reference"
@@ -46,10 +46,6 @@ class SetupVideoReferenceOperator(bpy.types.Operator):
                 use_framerate=False, replace_sel=True)
             bpy.context.scene.frame_end = max(context.sequences[0].frame_final_end - 1, bpy.context.scene.frame_end)
         return {'FINISHED'}
-
-    def invoke(self, context, event):
-        context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
 
     def __is_selected_file_valid(self):
         if not os.path.isfile(self.filepath):

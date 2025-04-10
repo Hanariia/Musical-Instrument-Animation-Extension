@@ -1,6 +1,5 @@
 import bpy
 from ..operators.setup_video_reference import SetupVideoReferenceOperator
-from ..operators.hand_pose_overlay import HandPoseOverlayOperator
 
 
 class EstimatedHandPosesReferencePanel(bpy.types.Panel):
@@ -12,8 +11,6 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        row = layout.row()
-        row.operator("mia.check_sequencer_availability", text=SetupVideoReferenceOperator.bl_label, icon='FILE_MOVIE')
-        row = layout.row()
-        row.operator("mia.import_hand_data", text="Import Estimated Hand Poses", icon='IMPORT')
+        layout.operator("mia.check_sequencer_availability", text=SetupVideoReferenceOperator.bl_label, icon='FILE_MOVIE')
+        layout.operator("mia.import_hand_data", icon='IMPORT')
 

@@ -93,34 +93,3 @@ class LandmarkConnections(Enum):
     @classmethod
     def get_group_connections(cls, group: LandmarkGroup) -> List[int]:
         return cls[group.name + "_CONNECTIONS"].value
-
-
-def main():
-    """
-    Command line arguments:
-        filepath:       path to where the generated image will be saved including the filename
-        image_height:   height of the generated image in pixels
-        image_width:    width of the generated image in pixels
-        positions:      hand pose's normalized positions in json string format
-    """
-    usage = f"Usage: python {sys.argv[0]} <filepath> <image_height> <image_width> <positions> " + main.__doc__
-    if len(sys.argv) != 5:
-        raise ValueError("Invalid number of arguments. " + usage)
-    if not sys.argv[2].isdecimal():
-        raise ValueError(f"Invalid image height argument. " + usage)
-    if not sys.argv[3].isdecimal():
-        raise ValueError(f"Invalid image width argument. " + usage)
-    try:
-        normalized_positions = json.loads(sys.argv[4])
-    except JSONDecodeError:
-        raise ValueError(f"Invalid <positions> argument. " + usage)
-
-    filepath = sys.argv[1]
-    height = int(sys.argv[2])
-    width = int(sys.argv[3])
-
-    create_hand_pose_image(height, width, normalized_positions, filepath)
-
-
-if __name__ == "__main__":
-    main()

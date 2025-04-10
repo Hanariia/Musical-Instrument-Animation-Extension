@@ -1,4 +1,4 @@
-from bisect import bisect_left
+from bisect import bisect
 from enum import Enum
 import json
 from typing import List, Dict, Optional
@@ -50,7 +50,7 @@ class EstimatedHandPoses:
 
     def find_hand_pose(self, timestamp, hand_type: HandType):
         hand_poses_list = self.get_hand_pose_list(hand_type)
-        index = bisect_left(hand_poses_list, timestamp, key=lambda pose: pose.timestamp)
+        index = bisect(hand_poses_list, timestamp, key=lambda pose: pose.timestamp)
         if index != 0:
             return hand_poses_list[index - 1]
         return hand_poses_list[0]
