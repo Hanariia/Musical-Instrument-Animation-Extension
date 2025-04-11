@@ -10,7 +10,7 @@ from .estimated_hand_poses import EstimatedHandPoses, HandPose, HandType
 
 
 HAND_POSES_DIRECTORY = "tmp/hand_poses"
-
+MAX_IMAGE_STRIP_LENGTH_SECS = 2
 
 @dataclass
 class ImageStripData:
@@ -79,7 +79,9 @@ class HandPoseImageManager:
         if hand_pose.index == len(hand_poses_list) - 1:
             return start_frame, None
         end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
-        return start_frame, end_frame
+
+        # shorten to max image strip length
+        return start_frame, min(end_frame, start_frame + round(MAX_IMAGE_STRIP_LENGTH_SECS * fps))
 
     def __get_center_aligned_frames(self, hand_pose: HandPose, fps: float) -> Tuple[int, Optional[int]]:
         hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
@@ -94,6 +96,11 @@ class HandPoseImageManager:
             return start_frame, None
         end_frame = hand_poses_list[hand_pose.index + 1].timestamp * fps
         end_frame = int((hand_pose_frame + end_frame) // 2)
+
+        # shorten to MAX_IMAGE_STRIP_LENGTH_SECS / 2 seconds from either side
+        max_length_frames_half = int((MAX_IMAGE_STRIP_LENGTH_SECS * fps) // 2)
+        start_frame = max(start_frame, round(hand_pose_frame) - max_length_frames_half)
+        end_frame = min(end_frame, round(hand_pose_frame) + max_length_frames_half)
         return start_frame, end_frame
 
     def __create_image(self, hand_pose: HandPose) -> None:
