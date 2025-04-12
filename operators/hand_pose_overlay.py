@@ -47,6 +47,9 @@ class HandPoseOverlayOperator(bpy.types.Operator):
             self.report({'INFO'}, "Clearing Hand Pose Overlay...")
             return {'CANCELLED'}
 
+        if overlay_properties.pause_overlay_generation:
+            return {'PASS_THROUGH'}
+
         if bpy.context.scene.frame_current != self.latest_current_frame:
             self.execute(context)
             self.latest_current_frame = bpy.context.scene.frame_current
@@ -111,3 +114,7 @@ class HandPoseOverlayProperties(bpy.types.PropertyGroup):
     clear_overlay: bpy.props.BoolProperty(default=False)
     overlay_active: bpy.props.BoolProperty(default=False)
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
+    pause_overlay_generation: bpy.props.BoolProperty(
+        default=False,
+        name='Pause Overlay Generation',
+        description='Toggle overlay generation.')

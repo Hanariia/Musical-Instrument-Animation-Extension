@@ -11,6 +11,16 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("mia.check_sequencer_availability", text=SetupVideoReferenceOperator.bl_label, icon='FILE_MOVIE')
+        # IMPORT VIDEO
+        layout.operator("mia.check_sequencer_availability", text=SetupVideoReferenceOperator.bl_label,
+                        icon='FILE_MOVIE')
+
+        # IMPORT ESTIMATED HAND POSES
         layout.operator("mia.import_hand_data", icon='IMPORT')
 
+        # RESUME/PAUSE OVERLAY GENERATION
+        if context.window_manager.overlay_properties.pause_overlay_generation:
+            layout.prop(context.window_manager.overlay_properties, "pause_overlay_generation",
+                        text='Resume Overlay Generation', icon='PLAY')
+        else:
+            layout.prop(context.window_manager.overlay_properties, "pause_overlay_generation", icon='PAUSE')
