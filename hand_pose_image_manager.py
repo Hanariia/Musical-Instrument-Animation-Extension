@@ -12,6 +12,7 @@ from .estimated_hand_poses import EstimatedHandPoses, HandPose, HandType
 HAND_POSES_DIRECTORY = "tmp/hand_poses"
 MAX_IMAGE_STRIP_LENGTH_SECS = 2
 
+
 @dataclass
 class ImageStripData:
     """

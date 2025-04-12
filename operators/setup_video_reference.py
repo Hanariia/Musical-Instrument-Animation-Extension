@@ -15,7 +15,8 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
     filename: bpy.props.StringProperty(subtype='FILE_NAME')
 
     # filters the file selection
-    accepted_file_extensions: List[str] = [".mp4", ".avi", ".mov", ".mkv", ".webm", ".mpg", ".mpeg"]
+    accepted_file_extensions: List[str] = [".mp4", ".avi", ".mov", ".mkv", ".webm", ".mpg", ".mpeg",
+                                           ".ogg", ".ogv", ".dv", ".dvd", ".vob", ".flv"]
     extensions_string = "*" + ";*".join(accepted_file_extensions)
     filter_glob: bpy.props.StringProperty(
         default=extensions_string,
