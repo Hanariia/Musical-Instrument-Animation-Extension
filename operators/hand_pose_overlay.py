@@ -1,8 +1,7 @@
-import os
 import bpy
 
 from ..estimated_hand_poses import HandType
-from ..miae_utils import find_area, get_abs_addon_dir
+from ..miae_utils import find_area
 from ..hand_pose_image_manager import HandPoseImageManager, ImageStripData, HAND_POSES_DIRECTORY
 
 
@@ -47,7 +46,9 @@ class HandPoseOverlayOperator(bpy.types.Operator):
             self.report({'INFO'}, "Clearing Hand Pose Overlay...")
             return {'CANCELLED'}
 
-        if overlay_properties.pause_overlay_generation:
+        # Do nothing if overlay generation is paused or the preview/sequencer is not open.
+        sequencer_area = find_area(bpy.context, area_type='SEQUENCE_EDITOR')
+        if overlay_properties.pause_overlay_generation or sequencer_area is None:
             return {'PASS_THROUGH'}
 
         if bpy.context.scene.frame_current != self.latest_current_frame:
@@ -97,10 +98,11 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
     @staticmethod
     def add_image_strip(context, image_strip_data: ImageStripData):
-        abs_directory_path = os.path.join(get_abs_addon_dir(), HAND_POSES_DIRECTORY)
-        with context.temp_override(area=find_area(bpy.context, area_type='SEQUENCE_EDITOR')):
+        sequencer_area = find_area(bpy.context, area_type='SEQUENCE_EDITOR')
+        # sequencer_area shouldn't be None as self.modal() checks if it is present in the screen.
+        with context.temp_override(area=sequencer_area):
             bpy.ops.sequencer.image_strip_add(
-                directory=abs_directory_path,
+                directory=HAND_POSES_DIRECTORY,
                 relative_path=True,
                 files=[{"name": image_strip_data.filename}],
                 frame_start=image_strip_data.start_frame,

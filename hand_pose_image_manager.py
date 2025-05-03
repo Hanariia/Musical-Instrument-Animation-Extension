@@ -1,6 +1,5 @@
 import os
 from dataclasses import dataclass
-from math import floor
 from typing import Tuple, List, Optional
 import bpy
 
@@ -9,7 +8,7 @@ from .miae_utils import get_abs_addon_dir
 from .estimated_hand_poses import EstimatedHandPoses, HandPose, HandType
 
 
-HAND_POSES_DIRECTORY = "tmp/hand_poses"
+HAND_POSES_DIRECTORY = os.path.join(get_abs_addon_dir(), "tmp/hand_poses")
 MAX_IMAGE_STRIP_LENGTH_SECS = 2
 
 
@@ -107,6 +106,6 @@ class HandPoseImageManager:
     def __create_image(self, hand_pose: HandPose) -> None:
         if hand_pose.image_filename is None:
             filename = f"hand_pose{hand_pose.index}{hand_pose.hand_type.name}.png"
-            full_path = os.path.join(get_abs_addon_dir(), HAND_POSES_DIRECTORY, filename)
+            full_path = os.path.join(HAND_POSES_DIRECTORY, filename)
             create_hand_pose_image(self.image_size[0], self.image_size[1], hand_pose.normalized_positions, full_path)
             hand_pose.image_filename = filename
