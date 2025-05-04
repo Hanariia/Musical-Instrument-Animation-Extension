@@ -15,6 +15,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
         super().__init__()
         self.image_manager = None
         self.latest_current_frame = -1
+        self.start_frame_offset = 0
 
     @classmethod
     def poll(cls, context):
@@ -25,11 +26,11 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
     def execute(self, context):
         image_strips = self.image_manager.get_frames_image_strip_data(
-            bpy.context.scene.frame_current, self.__get_fps(), 1, 3)
+            bpy.context.scene.frame_current - self.start_frame_offset, self.__get_fps(), 1, 3)
+
         for strip in image_strips:
-            # handle the end of the last image strip
-            if strip.end_frame is None:
-                strip.end_frame = context.scene.sequence_editor.sequences[0].frame_final_end
+            strip.start_frame += self.start_frame_offset
+            strip.end_frame += self.start_frame_offset
             self.add_image_strip(context, strip)
         return {'RUNNING_MODAL'}
 
@@ -82,6 +83,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
         image_height = sequence_editor.sequences[0].elements[0].orig_height
         image_width = sequence_editor.sequences[0].elements[0].orig_width
         filepath = context.window_manager.overlay_properties.filepath
+        self.start_frame_offset = context.window_manager.video_reference_properties.start_frame - 1
         self.image_manager = HandPoseImageManager((image_height, image_width), filepath)
 
     def __refresh_overlay(self, context):

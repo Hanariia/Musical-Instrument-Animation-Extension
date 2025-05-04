@@ -75,30 +75,36 @@ class HandPoseImageManager:
     def __get_edge_aligned_frames(self, hand_pose: HandPose, fps: float) -> Tuple[int, Optional[int]]:
         hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
         start_frame = round(hand_pose.timestamp * fps)
+        max_end_frame = start_frame + round(MAX_IMAGE_STRIP_LENGTH_SECS * fps)
 
+        # handle edge case (last hand pose)
         if hand_pose.index == len(hand_poses_list) - 1:
-            return start_frame, None
-        end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
+            return start_frame, min(max_end_frame, bpy.context.window_manager.video_reference_properties.duration + 1)
 
+        end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
         # shorten to max image strip length
-        return start_frame, min(end_frame, start_frame + round(MAX_IMAGE_STRIP_LENGTH_SECS * fps))
+        return start_frame, min(end_frame, max_end_frame)
 
     def __get_center_aligned_frames(self, hand_pose: HandPose, fps: float) -> Tuple[int, Optional[int]]:
         hand_poses_list = self.estimated_hand_poses.get_hand_pose_list(hand_pose.hand_type)
         hand_pose_frame = hand_pose.timestamp * fps
-        if hand_pose.index == 0:
+        max_length_frames_half = int((MAX_IMAGE_STRIP_LENGTH_SECS * fps) // 2)
+
+        # START FRAME
+        if hand_pose.index == 0:  # handle edge case (first hand pose)
             start_frame = round(hand_pose_frame)
         else:
             prev_frame = hand_poses_list[hand_pose.index - 1].timestamp * fps
             start_frame = int((hand_pose_frame + prev_frame) // 2)
 
-        if hand_pose.index == len(hand_poses_list) - 1:
-            return start_frame, None
+        # END FRAME
+        if hand_pose.index == len(hand_poses_list) - 1:  # handle edge case (last hand pose)
+            end_frame = round(hand_pose_frame + max_length_frames_half)
+            return start_frame, min(end_frame, bpy.context.window_manager.video_reference_properties.duration + 1)
         end_frame = hand_poses_list[hand_pose.index + 1].timestamp * fps
         end_frame = int((hand_pose_frame + end_frame) // 2)
 
-        # shorten to MAX_IMAGE_STRIP_LENGTH_SECS / 2 seconds from either side
-        max_length_frames_half = int((MAX_IMAGE_STRIP_LENGTH_SECS * fps) // 2)
+        # shorten to (MAX_IMAGE_STRIP_LENGTH_SECS / 2) seconds from either side
         start_frame = max(start_frame, round(hand_pose_frame) - max_length_frames_half)
         end_frame = min(end_frame, round(hand_pose_frame) + max_length_frames_half)
         return start_frame, end_frame

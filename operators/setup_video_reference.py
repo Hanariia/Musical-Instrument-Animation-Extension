@@ -43,9 +43,12 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
             bpy.ops.sequencer.delete()
             bpy.ops.sequencer.movie_strip_add(
                 filepath=self.filepath,
-                show_multiview=False, frame_start=1, channel=1, fit_method='FIT', adjust_playback_rate=True, sound=True,
-                use_framerate=False, replace_sel=True)
+                show_multiview=False, frame_start=context.scene.video_reference_settings.start_frame, channel=1,
+                fit_method='FIT', adjust_playback_rate=True, sound=True, use_framerate=False, replace_sel=True)
             bpy.context.scene.frame_end = max(context.sequences[0].frame_final_end - 1, bpy.context.scene.frame_end)
+
+        context.window_manager.video_reference_properties.start_frame = int(context.sequences[0].frame_start)
+        context.window_manager.video_reference_properties.duration = int(context.sequences[0].frame_final_duration)
         return {'FINISHED'}
 
     def __is_selected_file_valid(self):
@@ -82,3 +85,8 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
             if area.type == area_type:
                 area = area
         return area
+
+
+class VideoReferenceProperties(bpy.types.PropertyGroup):
+    start_frame: bpy.props.IntProperty(default=1)
+    duration: bpy.props.IntProperty()

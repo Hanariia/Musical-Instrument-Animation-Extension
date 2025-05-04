@@ -12,6 +12,8 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         # IMPORT VIDEO
+        layout.label(text="Video Reference")
+        layout.prop(context.scene.video_reference_settings, "start_frame")
         layout.operator("mia.check_sequencer_availability", text=SetupVideoReferenceOperator.bl_label,
                         icon='FILE_MOVIE')
 
