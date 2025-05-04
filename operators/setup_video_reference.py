@@ -59,20 +59,26 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
         # check if preview area is already present
         area_for_preview = find_area(context, 'SEQUENCE_EDITOR')
         if area_for_preview is not None and area_for_preview.spaces[0].view_type == 'PREVIEW':
-            return area_for_preview
+            return
 
-        area_for_preview = self.__choose_area_for_preview(context)
+        # split the 3D view area into two
+        area_for_preview = find_area(context, 'VIEW_3D')
         with context.temp_override(area=area_for_preview):
-            # add preview area to screen
-            bpy.ops.screen.area_split(direction='VERTICAL')
+            if context.screen.name == 'Animation':
+                bpy.ops.screen.area_split(direction='HORIZONTAL', factor=0.45)
+            else:
+                bpy.ops.screen.area_split(direction='VERTICAL', factor=0.4)
+
+        # change the new 3d view area to the preview
+        area_for_preview = self.__find_last_area_type_in_screen(context, area_for_preview.type)
+        with context.temp_override(area=area_for_preview):
             bpy.context.area.ui_type = 'SEQUENCE_EDITOR'
             bpy.context.space_data.view_type = 'PREVIEW'
 
     @staticmethod
-    def __choose_area_for_preview(context):
+    def __find_last_area_type_in_screen(context, area_type: str) -> bpy.types.Area:
         area = None
-        if context.screen.name == 'Animation':
-            area = find_area(context, 'DOPESHEET_EDITOR')
-        if area is None:
-            area = find_area(context, 'VIEW_3D')
+        for area in context.screen.areas.values():
+            if area.type == area_type:
+                area = area
         return area
