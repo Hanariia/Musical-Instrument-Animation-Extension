@@ -17,6 +17,17 @@ class VideoReferenceSettingsPanel(bpy.types.Panel):
 
         layout.label(text="Hand Pose Alignment")
         row = layout.row(align=True)
-        row.prop(context.scene.overlay_settings, "center_align_hand_poses", toggle=True)
+        row.prop(context.scene.overlay_settings, "center_align_hand_poses", toggle=True, icon='ANCHOR_CENTER')
         row.prop(context.scene.overlay_settings, "center_align_hand_poses", text="Edge Align", toggle=True,
-                 invert_checkbox=True)
+                 invert_checkbox=True, icon='ANCHOR_LEFT')
+
+        layout.label(text="Overlay Visual Settings")
+        layout.prop(context.scene.overlay_settings, "line_width")
+        layout.prop(context.scene.overlay_settings, "circle_radius")
+
+        layout.label(text="Overlay Compression")
+        row = layout.row()
+        row.alignment = 'CENTER'
+        row.label(text="Time Efficiency")
+        row.prop(context.scene.overlay_settings, "compression", slider=True, icon_only=True)
+        row.label(text="Storage Efficiency")

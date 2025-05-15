@@ -1,38 +1,31 @@
 from enum import Enum
-
-try:
-    import sys
-    from json import JSONDecodeError
-    from typing import List, Dict, Tuple
-    from PIL import Image, ImageDraw, ImageColor
-    import json
-except ImportError as e:
-    raise Exception(f"{e.msg}. Please install the missing packages: python -m pip install <missing_package>")
-
-CIRCLE_RADIUS = 4
+import bpy
+from typing import List, Dict, Tuple
+from PIL import Image, ImageDraw, ImageColor
 
 
 def create_hand_pose_image(image_height: int, image_width: int, normalized_positions: List[Dict[str, float]],
                            filepath: str):
     image = Image.new("RGB", (image_width, image_height), color="black")
     draw = ImageDraw.Draw(image)
+    overlay_settings = bpy.context.scene.overlay_settings
 
     # draw connection lines
     for group in LandmarkGroup:
         color = tuple([int(c * 0.6) for c in group.group_color])
         connections = [(normalized_positions[i]["x"] * image_width, normalized_positions[i]["y"] * image_height)
                        for i in LandmarkConnections.get_group_connections(group)]
-        draw.line(connections, fill=color, width=3)
+        draw.line(connections, fill=color, width=overlay_settings.line_width)
 
     # draw joint points
     for i, landmark in enumerate(normalized_positions):
         draw.circle((landmark["x"] * image_width, landmark["y"] * image_height),
-                    CIRCLE_RADIUS, fill=HandLandmarks(i).group.group_color)
+                    overlay_settings.circle_radius, fill=HandLandmarks(i).group.group_color)
 
     # save image
     if filepath[-4:] != ".png":
         filepath += ".png"
-    image.save(filepath, compress_level=0, transparency=(0, 0, 0))
+    image.save(filepath, compress_level=overlay_settings.compression, transparency=(0, 0, 0))
 
 
 class LandmarkGroup(Enum):
