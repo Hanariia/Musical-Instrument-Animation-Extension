@@ -60,6 +60,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
     def invoke(self, context, event):
         self.__set_attributes(context)
+        context.scene.tool_settings.sequencer_tool_settings.overlap_mode = 'OVERWRITE'
         context.window_manager.modal_handler_add(self)
         return {'RUNNING_MODAL'}
 
@@ -110,7 +111,8 @@ class HandPoseOverlayOperator(bpy.types.Operator):
                 frame_start=image_strip_data.start_frame,
                 frame_end=image_strip_data.end_frame,
                 channel=2 if image_strip_data.hand_type == HandType.RIGHT else 3,
-                show_multiview=False, fit_method='FIT')
+                show_multiview=False, fit_method='FIT',
+                overlap_shuffle_override=True)
 
 
 class HandPoseOverlayProperties(bpy.types.PropertyGroup):
