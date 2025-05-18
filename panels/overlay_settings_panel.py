@@ -1,10 +1,10 @@
 import bpy
 
 
-class VideoReferenceSettingsPanel(bpy.types.Panel):
-    """Creates video reference settings panel in the sidebar of the preview."""
-    bl_label = "Video Reference Settings"
-    bl_idname = "SEQUENCE_EDITOR_PT_video_reference_settings"
+class OverlaySettingsPanel(bpy.types.Panel):
+    """Creates overlay settings panel in the sidebar of the preview."""
+    bl_label = "Overlay Settings"
+    bl_idname = "SEQUENCE_EDITOR_PT_overlay_settings"
     bl_space_type = 'SEQUENCE_EDITOR'
     bl_region_type = 'UI'
     bl_category = "Video Reference"
@@ -25,9 +25,5 @@ class VideoReferenceSettingsPanel(bpy.types.Panel):
         layout.prop(context.scene.overlay_settings, "line_width")
         layout.prop(context.scene.overlay_settings, "circle_radius")
 
-        layout.label(text="Overlay Compression Level")
-        row = layout.row()
-        row.alignment = 'CENTER'
-        row.label(text="Time Efficiency")
-        row.prop(context.scene.overlay_settings, "compression", slider=True, icon_only=True)
-        row.label(text="Storage Efficiency")
+        layout.label(text="Overlay Compression")
+        layout.prop(context.scene.overlay_settings, "compression", slider=True)

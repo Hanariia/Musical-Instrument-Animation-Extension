@@ -20,9 +20,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         sequence_editor = bpy.context.scene.sequence_editor
-        if sequence_editor and len(sequence_editor.sequences) != 0:
-            return True
-        return False
+        return sequence_editor and len(sequence_editor.sequences) != 0
 
     def execute(self, context):
         image_strips = self.image_manager.get_frames_image_strip_data(

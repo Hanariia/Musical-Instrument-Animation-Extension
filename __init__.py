@@ -8,12 +8,12 @@ from .settings_properties import OverlaySettings, VideoReferenceSettings
 
 user_site_pkgs = site.getusersitepackages()
 if user_site_pkgs not in sys.path:
-    sys.path.insert(0, user_site_pkgs)
+    sys.path.append(user_site_pkgs)
 
 try:
     from .operators.hand_pose_overlay import HandPoseOverlayOperator, HandPoseOverlayProperties
     from .panels.estimated_hand_poses_reference import EstimatedHandPosesReferencePanel
-    from .panels.reference_settings_pannel import VideoReferenceSettingsPanel
+    from .panels.overlay_settings_panel import OverlaySettingsPanel
     from .operators.setup_video_reference import SetupVideoReferenceOperator, VideoReferenceProperties
     from .operators.check_sequencer_availability import CheckSequencerAvailabilityOperator
     from .operators.import_hand_data import ImportHandDataOperator
@@ -32,7 +32,7 @@ bl_info = {
 
 classes = [
     EstimatedHandPosesReferencePanel, SetupVideoReferenceOperator, HandPoseOverlayOperator, HandPoseOverlayProperties,
-    VideoReferenceSettingsPanel, CheckSequencerAvailabilityOperator, ImportHandDataOperator, OverlaySettings,
+    OverlaySettingsPanel, CheckSequencerAvailabilityOperator, ImportHandDataOperator, OverlaySettings,
     VideoReferenceSettings, VideoReferenceProperties, ClearOverlayWrapperOperator, RefreshOverlayWrapperOperator
 ]
 

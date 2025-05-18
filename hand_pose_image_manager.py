@@ -30,10 +30,18 @@ class HandPoseImageManager:
         self.image_size: Tuple[int, int] = image_size  # height, width
         self.estimated_hand_poses: EstimatedHandPoses = EstimatedHandPoses(filepath=hand_poses_filepath)
         if os.path.isdir(HAND_POSES_DIRECTORY):
-            for file in os.listdir(HAND_POSES_DIRECTORY):
-                os.remove(os.path.join(HAND_POSES_DIRECTORY, file))
+            self.__clear_hand_pose_directory()
         else:
             os.makedirs(HAND_POSES_DIRECTORY)
+
+    def __del__(self):
+        self.__clear_hand_pose_directory()
+
+    @staticmethod
+    def __clear_hand_pose_directory():
+        if os.path.isdir(HAND_POSES_DIRECTORY):
+            for file in os.listdir(HAND_POSES_DIRECTORY):
+                os.remove(os.path.join(HAND_POSES_DIRECTORY, file))
 
     def get_frames_image_strip_data(self, frame, fps, previous_frames_count, next_frames_count):
         image_strips = []
