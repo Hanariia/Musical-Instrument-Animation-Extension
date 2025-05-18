@@ -20,9 +20,18 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
         # IMPORT ESTIMATED HAND POSES
         layout.operator("mia.import_hand_data", icon='IMPORT')
 
+        overlay_controls = layout.box()
+        overlay_controls.label(text='Overlay Controls')
         # RESUME/PAUSE OVERLAY GENERATION
         if context.window_manager.overlay_properties.pause_overlay_generation:
-            layout.prop(context.window_manager.overlay_properties, "pause_overlay_generation",
-                        text='Resume Overlay Generation', icon='PLAY')
+            overlay_controls.prop(context.window_manager.overlay_properties, "pause_overlay_generation",
+                                  text='Resume Generation', icon='PLAY')
         else:
-            layout.prop(context.window_manager.overlay_properties, "pause_overlay_generation", icon='PAUSE')
+            overlay_controls.prop(context.window_manager.overlay_properties, "pause_overlay_generation", icon='PAUSE')
+
+        row = overlay_controls.row()
+        # REFRESH OVERLAY
+        row.operator("mia.refresh_overlay", icon='FILE_REFRESH', text="Refresh")
+
+        # CLEAR OVERLAY
+        row.operator("mia.clear_overlay", icon='TRASH', text="Clear")

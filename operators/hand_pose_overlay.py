@@ -122,5 +122,5 @@ class HandPoseOverlayProperties(bpy.types.PropertyGroup):
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
     pause_overlay_generation: bpy.props.BoolProperty(
         default=False,
-        name='Pause Overlay Generation',
+        name='Pause Generation',
         description='Toggle overlay generation.')

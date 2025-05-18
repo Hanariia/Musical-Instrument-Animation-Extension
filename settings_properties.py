@@ -26,7 +26,7 @@ class OverlaySettings(bpy.types.PropertyGroup):
     # although Pillow allows compression up to 9,
     # the difference of the hand pose images size is insignificant in range 3-9
     compression: bpy.props.IntProperty(
-        name="Overlay Compression",
+        name="Compression level",
         description="Set the compression level of the hand pose overlay images. "
                     "Lower compression results in better time efficiency, "
                     "while higher compression results in better storage efficiency",

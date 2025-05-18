@@ -25,7 +25,7 @@ class VideoReferenceSettingsPanel(bpy.types.Panel):
         layout.prop(context.scene.overlay_settings, "line_width")
         layout.prop(context.scene.overlay_settings, "circle_radius")
 
-        layout.label(text="Overlay Compression")
+        layout.label(text="Overlay Compression Level")
         row = layout.row()
         row.alignment = 'CENTER'
         row.label(text="Time Efficiency")

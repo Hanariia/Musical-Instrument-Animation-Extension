@@ -2,6 +2,8 @@ import bpy
 import site
 import sys
 
+from .operators.refresh_overlay_wrapper import RefreshOverlayWrapperOperator
+from .operators.clear_overlay_wrapper import ClearOverlayWrapperOperator
 from .settings_properties import OverlaySettings, VideoReferenceSettings
 
 user_site_pkgs = site.getusersitepackages()
@@ -31,7 +33,7 @@ bl_info = {
 classes = [
     EstimatedHandPosesReferencePanel, SetupVideoReferenceOperator, HandPoseOverlayOperator, HandPoseOverlayProperties,
     VideoReferenceSettingsPanel, CheckSequencerAvailabilityOperator, ImportHandDataOperator, OverlaySettings,
-    VideoReferenceSettings, VideoReferenceProperties
+    VideoReferenceSettings, VideoReferenceProperties, ClearOverlayWrapperOperator, RefreshOverlayWrapperOperator
 ]
 
 
