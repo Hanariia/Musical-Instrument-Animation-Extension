@@ -3,10 +3,10 @@ import bpy
 from bpy_extras.io_utils import ImportHelper
 
 
-class ImportHandDataOperator(bpy.types.Operator, ImportHelper):
+class ImportHandPosesOperator(bpy.types.Operator, ImportHelper):
     """Import estimated hand poses json."""
-    bl_idname = "mia.import_hand_data"
-    bl_label = "Import Estimated Hand Poses"
+    bl_idname = "mia.import_hand_poses"
+    bl_label = "Import Hand Poses"
     bl_options = {'REGISTER', 'UNDO'}
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
@@ -35,7 +35,7 @@ class ImportHandDataOperator(bpy.types.Operator, ImportHelper):
 
     @classmethod
     def poll(cls, context):
-        sequence_editor = bpy.context.scene.sequence_editor
+        sequence_editor = context.scene.sequence_editor
         return sequence_editor and len(sequence_editor.sequences) != 0
 
     def __is_selected_file_valid(self):

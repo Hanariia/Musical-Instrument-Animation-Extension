@@ -19,12 +19,12 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        sequence_editor = bpy.context.scene.sequence_editor
+        sequence_editor = context.scene.sequence_editor
         return sequence_editor and len(sequence_editor.sequences) != 0
 
     def execute(self, context):
         image_strips = self.image_manager.get_frames_image_strip_data(
-            bpy.context.scene.frame_current - self.start_frame_offset, self.__get_fps(), 1, 3)
+            context.scene.frame_current - self.start_frame_offset, self.__get_fps(context), 1, 3)
 
         for strip in image_strips:
             strip.start_frame += self.start_frame_offset
@@ -46,13 +46,13 @@ class HandPoseOverlayOperator(bpy.types.Operator):
             return {'CANCELLED'}
 
         # Do nothing if overlay generation is paused or the preview/sequencer is not open.
-        sequencer_area = find_area(bpy.context, area_type='SEQUENCE_EDITOR')
+        sequencer_area = find_area(context, area_type='SEQUENCE_EDITOR')
         if overlay_properties.pause_overlay_generation or sequencer_area is None:
             return {'PASS_THROUGH'}
 
-        if bpy.context.scene.frame_current != self.latest_current_frame:
+        if context.scene.frame_current != self.latest_current_frame:
             self.execute(context)
-            self.latest_current_frame = bpy.context.scene.frame_current
+            self.latest_current_frame = context.scene.frame_current
 
         return {'PASS_THROUGH'}
 
@@ -68,14 +68,8 @@ class HandPoseOverlayOperator(bpy.types.Operator):
         context.window_manager.overlay_properties.clear_overlay = False
 
     @staticmethod
-    def __get_current_timestamp():
-        frame = bpy.context.scene.frame_current
-        fps = bpy.context.scene.render.fps / bpy.context.scene.render.fps_base
-        return frame / fps
-
-    @staticmethod
-    def __get_fps():
-        return bpy.context.scene.render.fps / bpy.context.scene.render.fps_base
+    def __get_fps(context):
+        return context.scene.render.fps / context.scene.render.fps_base
 
     def __set_attributes(self, context):
         sequence_editor = context.scene.sequence_editor
@@ -93,13 +87,14 @@ class HandPoseOverlayOperator(bpy.types.Operator):
     def __clear_overlay(self, context):
         with context.temp_override(area=find_area(context, area_type='SEQUENCE_EDITOR')):
             bpy.ops.sequencer.select_all(action='SELECT')
-            context.scene.sequence_editor.sequences[0].select = False
+            if context.scene.sequence_editor.sequences:
+                context.scene.sequence_editor.sequences[0].select = False
             bpy.ops.sequencer.delete()
         self.latest_current_frame = -1
 
     @staticmethod
     def add_image_strip(context, image_strip_data: ImageStripData):
-        sequencer_area = find_area(bpy.context, area_type='SEQUENCE_EDITOR')
+        sequencer_area = find_area(context, area_type='SEQUENCE_EDITOR')
         # sequencer_area shouldn't be None as self.modal() checks if it is present in the screen.
         with context.temp_override(area=sequencer_area):
             bpy.ops.sequencer.image_strip_add(
