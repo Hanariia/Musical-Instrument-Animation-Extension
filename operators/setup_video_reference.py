@@ -49,14 +49,13 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
 
         context.window_manager.video_reference_properties.start_frame = int(context.sequences[0].frame_start)
         context.window_manager.video_reference_properties.duration = int(context.sequences[0].frame_final_duration)
+        context.window_manager.reference_active = True
         return {'FINISHED'}
 
     def __is_selected_file_valid(self):
         if not os.path.isfile(self.filepath):
             return False
-        if os.path.splitext(self.filename)[1] not in self.accepted_file_extensions:
-            return False
-        return True
+        return os.path.splitext(self.filename)[1] in self.accepted_file_extensions
 
     def __setup_preview_area(self, context):
         # check if preview area is already present

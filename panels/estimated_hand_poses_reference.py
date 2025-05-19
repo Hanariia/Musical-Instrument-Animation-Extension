@@ -18,7 +18,10 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
                         icon='FILE_MOVIE')
 
         # IMPORT ESTIMATED HAND POSES
-        layout.operator("mia.import_hand_data", icon='IMPORT')
+        layout.operator("mia.import_hand_poses", icon='IMPORT')
+
+        # CLEAR REFERENCE
+        layout.operator("mia.clear_reference", icon='TRASH')
 
         overlay_controls = layout.box()
         overlay_controls.label(text='Overlay Controls')
