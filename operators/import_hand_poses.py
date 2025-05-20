@@ -4,7 +4,7 @@ from bpy_extras.io_utils import ImportHelper
 
 
 class ImportHandPosesOperator(bpy.types.Operator, ImportHelper):
-    """Import estimated hand poses json."""
+    """Import estimated hand poses json file and start the overlay generation."""
     bl_idname = "mia.import_hand_poses"
     bl_label = "Import Hand Poses"
     bl_options = {'REGISTER', 'UNDO'}

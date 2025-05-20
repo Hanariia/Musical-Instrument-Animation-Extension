@@ -3,6 +3,7 @@ from ..operators.setup_video_reference import SetupVideoReferenceOperator
 
 
 class EstimatedHandPosesReferencePanel(bpy.types.Panel):
+    """A panel containing the general controls for operating the add-on."""
     bl_idname = "ESTIMATED_HAND_POSES_REFERENCE_PT_Panel"
     bl_label = "Estimated Hand Poses Reference"
     bl_space_type = "VIEW_3D"
@@ -23,6 +24,7 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
         # CLEAR REFERENCE
         layout.operator("mia.clear_reference", icon='TRASH')
 
+        # ----- OVERLAY CONTROLS -----
         overlay_controls = layout.box()
         overlay_controls.label(text='Overlay Controls')
         # RESUME/PAUSE OVERLAY GENERATION

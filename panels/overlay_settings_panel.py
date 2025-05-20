@@ -2,7 +2,7 @@ import bpy
 
 
 class OverlaySettingsPanel(bpy.types.Panel):
-    """Creates overlay settings panel in the sidebar of the preview."""
+    """A panel for adjusting the overlay settings."""
     bl_label = "Overlay Settings"
     bl_idname = "SEQUENCE_EDITOR_PT_overlay_settings"
     bl_space_type = 'SEQUENCE_EDITOR'
@@ -12,7 +12,8 @@ class OverlaySettingsPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Hand Visibility")
-        layout.prop(context.scene.sequence_editor.channels['Channel 2'], "mute", text="Right Hand", invert_checkbox=True)
+        layout.prop(context.scene.sequence_editor.channels['Channel 2'], "mute", text="Right Hand",
+                    invert_checkbox=True)
         layout.prop(context.scene.sequence_editor.channels['Channel 3'], "mute", text="Left Hand", invert_checkbox=True)
 
         layout.label(text="Hand Pose Alignment")

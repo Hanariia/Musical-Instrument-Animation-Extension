@@ -30,7 +30,7 @@ bl_info = {
     "blender": (4, 0, 0),
     "location": "View3D > Sidebar > Musical Instrument Animation",
     "warning": "",
-    "doc_url": "",
+    "doc_url": "https://github.com/Hanariia/Musical-Instrument-Animation-Reference-Extension/blob/main/README.md",
     "category": "Animation"
 }
 

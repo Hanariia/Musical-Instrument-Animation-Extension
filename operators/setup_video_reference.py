@@ -53,9 +53,7 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
         return {'FINISHED'}
 
     def __is_selected_file_valid(self):
-        if not os.path.isfile(self.filepath):
-            return False
-        return os.path.splitext(self.filename)[1] in self.accepted_file_extensions
+        return os.path.isfile(self.filepath) and os.path.splitext(self.filename)[1] in self.accepted_file_extensions
 
     def __setup_preview_area(self, context):
         # check if preview area is already present
@@ -87,5 +85,6 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
 
 
 class VideoReferenceProperties(bpy.types.PropertyGroup):
+    """A property group for the current video reference properties."""
     start_frame: bpy.props.IntProperty(default=1)
     duration: bpy.props.IntProperty()

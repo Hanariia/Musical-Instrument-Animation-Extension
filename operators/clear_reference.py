@@ -2,7 +2,9 @@ import bpy
 
 
 class ClearReferenceOperator(bpy.types.Operator):
-    """Clear Video Reference and Overlay."""
+    """Clear Video Reference and Overlay.
+    The operator first asks the user for confirmation before clearing the entire reference.
+    """
     bl_idname = "mia.clear_reference"
     bl_label = "Clear Reference"
     bl_options = {'REGISTER'}
@@ -21,6 +23,7 @@ class ClearReferenceOperator(bpy.types.Operator):
         bpy.ops.sequencer.delete()
         context.window_manager.reference_active = False
 
+        # update the UI to correctly draw the availability of each operator.
         for area in context.screen.areas:
             if area.type == 'VIEW_3D':
                 area.tag_redraw()
