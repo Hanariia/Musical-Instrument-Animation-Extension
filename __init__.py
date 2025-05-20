@@ -6,6 +6,11 @@ from .operators.clear_reference import ClearReferenceOperator
 from .operators.refresh_overlay_wrapper import RefreshOverlayWrapperOperator
 from .operators.clear_overlay_wrapper import ClearOverlayWrapperOperator
 from .settings_properties import OverlaySettings, VideoReferenceSettings
+from .panels.estimated_hand_poses_reference import EstimatedHandPosesReferencePanel
+from .panels.overlay_settings_panel import OverlaySettingsPanel
+from .operators.setup_video_reference import SetupVideoReferenceOperator, VideoReferenceProperties
+from .operators.check_sequencer_availability import CheckSequencerAvailabilityOperator
+from .operators.import_hand_poses import ImportHandPosesOperator
 
 user_site_pkgs = site.getusersitepackages()
 if user_site_pkgs not in sys.path:
@@ -13,22 +18,20 @@ if user_site_pkgs not in sys.path:
 
 try:
     from .operators.hand_pose_overlay import HandPoseOverlayOperator, HandPoseOverlayProperties
-    from .panels.estimated_hand_poses_reference import EstimatedHandPosesReferencePanel
-    from .panels.overlay_settings_panel import OverlaySettingsPanel
-    from .operators.setup_video_reference import SetupVideoReferenceOperator, VideoReferenceProperties
-    from .operators.check_sequencer_availability import CheckSequencerAvailabilityOperator
-    from .operators.import_hand_poses import ImportHandPosesOperator
 except ImportError as import_error:
-    raise Exception(f"{import_error.msg}. Please install the missing packages to {user_site_pkgs}")
+    raise Exception(f"{import_error.msg}. Please install the missing Pillow package with the following command:\n"
+                    f"pip --python \"{sys.executable}\" install Pillow --target \"{user_site_pkgs}\"")
 
 bl_info = {
-    "name": "Musical Instrument Animation Extension",
+    "name": "Musical Instrument Animation Reference Extension",
     "author": "Hana Drtílková",
-    "description": "",
-    "blender": (2, 80, 0),
-    "location": "View3D",
+    "description": "An add-on for displaying a reference video with hand pose data visualized as an overlay.",
+    "version": (1, 0),
+    "blender": (4, 0, 0),
+    "location": "View3D > Sidebar > Musical Instrument Animation",
     "warning": "",
-    "category": "Generic"
+    "doc_url": "",
+    "category": "Animation"
 }
 
 classes = [
