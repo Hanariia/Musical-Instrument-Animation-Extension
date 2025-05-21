@@ -1,4 +1,7 @@
 # Musical Instrument Animation Reference Extension
+
+[GitHub repository](https://github.com/Hanariia/Musical-Instrument-Animation-Reference-Extension)
+
 A Blender add-on designed to display a reference video and visualize hand pose data 
 from a JSON file in form of an overlay, using output from the [Hand Capture](https://github.com/KubakCz/mediapipe-hand-tracking) web 
 application. 
