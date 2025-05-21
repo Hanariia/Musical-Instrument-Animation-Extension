@@ -4,6 +4,7 @@ from .miae_utils import refresh_overlay
 
 
 class OverlaySettings(bpy.types.PropertyGroup):
+    """A property group for containing the overlay settings."""
     center_align_hand_poses: bpy.props.BoolProperty(
         name="Center Align",
         default=True,
@@ -24,7 +25,7 @@ class OverlaySettings(bpy.types.PropertyGroup):
         default=5, update=refresh_overlay
     )
     # although Pillow allows compression up to 9,
-    # the difference of the hand pose images size is insignificant in range 3-9
+    # the difference of the hand pose images size is insignificant in range 5-9
     compression: bpy.props.IntProperty(
         name="Compression Level",
         description="Set the compression level of the hand pose overlay images. "
@@ -37,6 +38,7 @@ class OverlaySettings(bpy.types.PropertyGroup):
 
 
 class VideoReferenceSettings(bpy.types.PropertyGroup):
+    """A property group for containing video reference settings."""
     start_frame: bpy.props.IntProperty(name="Start Frame", default=1, min=1, soft_min=1,
                                        description="Set the desired starting frame of the video reference – "
                                                    "typically the starting frame of the MoCap animation.")
