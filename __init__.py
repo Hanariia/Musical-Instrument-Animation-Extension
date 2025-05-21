@@ -47,9 +47,9 @@ def register():
         bpy.utils.register_class(cls)
 
     # Register Properties
-    bpy.types.WindowManager.reference_active = bpy.props.BoolProperty(default=False)
+    bpy.types.Scene.reference_active = bpy.props.BoolProperty(default=False)
     bpy.types.WindowManager.overlay_properties = bpy.props.PointerProperty(type=HandPoseOverlayProperties)
-    bpy.types.WindowManager.video_reference_properties = bpy.props.PointerProperty(type=VideoReferenceProperties)
+    bpy.types.Scene.video_reference_properties = bpy.props.PointerProperty(type=VideoReferenceProperties)
     bpy.types.Scene.overlay_settings = bpy.props.PointerProperty(type=OverlaySettings)
     bpy.types.Scene.video_reference_settings = bpy.props.PointerProperty(type=VideoReferenceSettings)
 
@@ -59,8 +59,8 @@ def unregister():
         bpy.utils.unregister_class(cls)
 
     # Unregister Properties
-    del bpy.types.WindowManager.reference_active
+    del bpy.types.Scene.reference_active
     del bpy.types.WindowManager.overlay_properties
-    del bpy.types.WindowManager.video_reference_properties
+    del bpy.types.Scene.video_reference_properties
     del bpy.types.Scene.overlay_settings
     del bpy.types.Scene.video_reference_settings

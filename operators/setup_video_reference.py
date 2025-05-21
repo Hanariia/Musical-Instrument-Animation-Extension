@@ -47,9 +47,9 @@ class SetupVideoReferenceOperator(bpy.types.Operator, ImportHelper):
                 fit_method='FIT', adjust_playback_rate=True, sound=True, use_framerate=False, replace_sel=True)
             bpy.context.scene.frame_end = max(context.sequences[0].frame_final_end - 1, bpy.context.scene.frame_end)
 
-        context.window_manager.video_reference_properties.start_frame = int(context.sequences[0].frame_start)
-        context.window_manager.video_reference_properties.duration = int(context.sequences[0].frame_final_duration)
-        context.window_manager.reference_active = True
+        context.scene.video_reference_properties.start_frame = int(context.sequences[0].frame_start)
+        context.scene.video_reference_properties.duration = int(context.sequences[0].frame_final_duration)
+        context.scene.reference_active = True
         return {'FINISHED'}
 
     def __is_selected_file_valid(self):

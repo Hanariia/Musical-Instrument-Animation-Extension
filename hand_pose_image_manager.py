@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass
-from typing import Tuple, List, Optional
+from typing import Tuple, List
 import bpy
 
 from .draw_handmarks import create_hand_pose_image
@@ -27,18 +27,10 @@ class HandPoseImageManager:
         self.image_size: Tuple[int, int] = image_size  # height, width
         self.estimated_hand_poses: EstimatedHandPoses = EstimatedHandPoses(filepath=hand_poses_filepath)
         if os.path.isdir(HAND_POSES_DIRECTORY):
-            self.__clear_hand_pose_directory()
-        else:
-            os.makedirs(HAND_POSES_DIRECTORY)
-
-    def __del__(self):
-        self.__clear_hand_pose_directory()
-
-    @staticmethod
-    def __clear_hand_pose_directory():
-        if os.path.isdir(HAND_POSES_DIRECTORY):
             for file in os.listdir(HAND_POSES_DIRECTORY):
                 os.remove(os.path.join(HAND_POSES_DIRECTORY, file))
+        else:
+            os.makedirs(HAND_POSES_DIRECTORY)
 
     def get_frame_image_strip_data(self, frame: int, fps: float, previous_hand_pose_count: int,
                                    next_hand_pose_count: int) -> List[ImageStripData]:
@@ -93,7 +85,7 @@ class HandPoseImageManager:
 
         # handle edge case (last hand pose)
         if hand_pose.index == len(hand_poses_list) - 1:
-            return start_frame, min(max_end_frame, bpy.context.window_manager.video_reference_properties.duration + 1)
+            return start_frame, min(max_end_frame, bpy.context.scene.video_reference_properties.duration + 1)
 
         end_frame = round(hand_poses_list[hand_pose.index + 1].timestamp * fps)
         # shorten to max image strip length
@@ -114,7 +106,7 @@ class HandPoseImageManager:
         # END FRAME
         if hand_pose.index == len(hand_poses_list) - 1:  # handle edge case (last hand pose)
             end_frame = round(hand_pose_frame + max_length_frames_half)
-            return start_frame, min(end_frame, bpy.context.window_manager.video_reference_properties.duration + 1)
+            return start_frame, min(end_frame, bpy.context.scene.video_reference_properties.duration + 1)
         end_frame = hand_poses_list[hand_pose.index + 1].timestamp * fps
         end_frame = round((hand_pose_frame + end_frame) / 2)
 

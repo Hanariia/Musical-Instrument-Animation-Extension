@@ -12,7 +12,7 @@ class ClearReferenceOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.window_manager.reference_active
+        return context.scene.reference_active
 
     def execute(self, context):
         # clear overlay if active
@@ -21,7 +21,7 @@ class ClearReferenceOperator(bpy.types.Operator):
 
         bpy.ops.sequencer.select_all(action='SELECT')
         bpy.ops.sequencer.delete()
-        context.window_manager.reference_active = False
+        context.scene.reference_active = False
 
         # update the UI to correctly draw the availability of each operator.
         for area in context.screen.areas:

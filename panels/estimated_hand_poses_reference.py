@@ -24,6 +24,10 @@ class EstimatedHandPosesReferencePanel(bpy.types.Panel):
         # CLEAR REFERENCE
         layout.operator("mia.clear_reference", icon='TRASH')
 
+        if context.window_manager.overlay_properties.overlay_active and context.scene.sync_mode != 'NONE':
+            layout.label(text="For reliable overlay generation,", icon='WARNING_LARGE')
+            layout.label(text="use \"Play Every Frame\" playback mode.",)
+
         # ----- OVERLAY CONTROLS -----
         overlay_controls = layout.box()
         overlay_controls.label(text='Overlay Controls')

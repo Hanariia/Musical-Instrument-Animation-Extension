@@ -19,8 +19,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        sequence_editor = context.scene.sequence_editor
-        return sequence_editor and len(sequence_editor.sequences) != 0
+        return context.scene.reference_active
 
     def execute(self, context):
         # Retrieve the necessary image strip data from the Image Manager
@@ -60,6 +59,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
         return {'PASS_THROUGH'}
 
     def invoke(self, context, event):
+        self.__clear_overlay(context)
         self.__set_attributes(context)
 
         # avoids multiple hand poses in one frame when hand pose frequency > fps
@@ -78,7 +78,7 @@ class HandPoseOverlayOperator(bpy.types.Operator):
         image_height = sequence_editor.sequences[0].elements[0].orig_height
         image_width = sequence_editor.sequences[0].elements[0].orig_width
         filepath = context.window_manager.overlay_properties.filepath
-        self.start_frame_offset = context.window_manager.video_reference_properties.start_frame - 1
+        self.start_frame_offset = context.scene.video_reference_properties.start_frame - 1
         self.image_manager = HandPoseImageManager((image_height, image_width), filepath)
 
     def __refresh_overlay(self, context):
